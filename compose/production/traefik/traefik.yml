@@ -31,8 +31,6 @@ http:
       rule: "Host(`sportlisbon.club`) || Host(`www.sportlisbon.club`)"
       entryPoints:
         - web-secure
-      middlewares:
-        - csrf
       service: fastapi
       tls:
         # https://docs.traefik.io/master/routing/routers/#certresolver
