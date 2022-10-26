@@ -11,26 +11,26 @@
 <body>
     <div class="container-fluid">
         <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-md-9 col-lg-6 col-xl-5">
+            <div class="col-md-9 col-lg-6 col-xl-5 mb-3">
                 <img src="{{ url_for('static', path='/images/sportsocial.png') }}" class="img-fluid" alt="Sports &auml; Social Logo">
             </div>
-        </div>
-        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-            <form method="post">
-                <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                    <p class="lead fw-normal mb-0 me-3">Enter password to continue</p>
-                </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form method="post">
+                    <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+                        <p class="lead fw-normal mb-0 me-3 mt-3">Enter password to continue</p>
+                    </div>
 
-                <!-- Password input -->
-                <div class="form-outline mb-3">
-                    <input type="password" name="password" class="form-control form-control-lg {% if error %}is-invalid{% endif %}" placeholder="Enter password" />
-                    {{ error }}
-                </div>
+                    <!-- Password input -->
+                    <div class="form-outline mb-3">
+                        <input type="password" name="password" class="form-control form-control-lg {% if error %}is-invalid{% endif %}" placeholder="Enter password" />
+                        {{ error }}
+                    </div>
 
-                <div class="text-center text-lg-start mt-4 pt-2">
-                    <input type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">
-                </div>
-            </form>
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <input type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>
