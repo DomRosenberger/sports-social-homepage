@@ -10,7 +10,7 @@ from bson import ObjectId
 from typing import Optional, List
 import motor.motor_asyncio
 
-app = FastAPI()
+app = FastAPI(docs_url=None)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"])
 templates = Jinja2Templates(directory="templates/")
@@ -70,20 +70,20 @@ class UpdateShortUrlModel(BaseModel):
         }
 
 
-@app.post("/", response_description="Add new short URL", response_model=ShortUrlModel)
-async def create_shorturl(shorturl: ShortUrlModel = Body(...)):
-    shorturl = jsonable_encoder(shorturl)
-    new_shorturl = await db["shorturls"].insert_one(shorturl)
-    created_shorturl = await db["shorturls"].find_one({"_id": new_shorturl.inserted_id})
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_shorturl)
+# @app.post("/", response_description="Add new short URL", response_model=ShortUrlModel)
+# async def create_shorturl(shorturl: ShortUrlModel = Body(...)):
+#     shorturl = jsonable_encoder(shorturl)
+#     new_shorturl = await db["shorturls"].insert_one(shorturl)
+#     created_shorturl = await db["shorturls"].find_one({"_id": new_shorturl.inserted_id})
+#     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_shorturl)
 
 
-@app.get(
-    "/", response_description="Process a short URL", response_model=List[ShortUrlModel]
-)
-async def list_shorturls():
-    shorturls = await db["shorturls"].find().to_list(1000)
-    return shorturls
+# @app.get(
+#     "/", response_description="Process a short URL", response_model=List[ShortUrlModel]
+# )
+# async def list_shorturls():
+#     shorturls = await db["shorturls"].find().to_list(1000)
+#     return shorturls
 
 
 @app.get(
