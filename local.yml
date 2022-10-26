@@ -1,5 +1,8 @@
 version: '3'
 
+volumes:
+  production_traefik: {}
+
 services:
   fastapi: &fastapi
     build:
@@ -11,3 +14,17 @@ services:
       - ./.envs/.local/.fastapi
     ports:
       - "80:80"
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: fastapi_app_production_traefik
+    depends_on:
+      - fastapi
+    volumes:
+      - production_traefik:/etc/traefik/acme:z
+
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
