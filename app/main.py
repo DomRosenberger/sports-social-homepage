@@ -99,32 +99,6 @@ class UpdateShortUrlModel(BaseModel):
 #     shorturls = await db["shorturls"].find().to_list(1000)
 #     return shorturls
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
-        "disabled": False,
-    },
-}
-
-
-def fake_decode_token(token):
-    return User(
-        username=token + "fakedecoded", email="john@example.com", full_name="John Doe"
-    )
-
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    user = fake_decode_token(token)
-    return user
-
-
-@app.get("/user/")
-async def user(current_user: User = Depends(get_current_user)):
-    return current_user
-
 
 def chunk_list(iterable, chunk_size):
     for i in range(0, len(iterable), chunk_size):
