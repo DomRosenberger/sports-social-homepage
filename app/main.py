@@ -1,8 +1,7 @@
 from datetime import datetime
 import os
-from fastapi import Depends, FastAPI, Request, Body, HTTPException, status, Form
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import Response, JSONResponse, RedirectResponse
+from fastapi import FastAPI, Request, HTTPException, Form
+from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
