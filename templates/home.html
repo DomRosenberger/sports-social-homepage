@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body>
+    <header>
+        <div class="p-3 mx-auto text-center">
+            <img src="{{ url_for('static', path='/images/sportsocial.png') }}" style="max-width: 25%" alt="Sports &auml; Social Logo">
+            <h1>Sports &amp; Social WhatsApp Groups</h1>
+            <p>Below you can find all active WhatsApp groups from the <a href="https://www.meetup.com/sports-social-lisbon/" target="_blank" title="Sports &amp; Social Lisbon">Sports &amp; Social Meetup group</a>.</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        {% for shorturls in chunked_shorturls %}
+        <div class="row">
+            {% for object in shorturls %}
+            <div class="col-md-4">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header"><h2>{{ object.short_url_id|capitalize }}</h2></div>
+                    <div class="card-body">
+                        <p>{{ object.description }}</p>
+                        <a href="/{{ object.short_url_id }}" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Join {{object.short_url_id|capitalize }} Group</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
