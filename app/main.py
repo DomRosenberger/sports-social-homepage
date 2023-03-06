@@ -2,7 +2,6 @@ from datetime import datetime
 import os
 from fastapi import FastAPI, Request, HTTPException, Form
 from fastapi.responses import RedirectResponse
-from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -17,7 +16,6 @@ client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"])
 db = client.shorturls
 templates = Jinja2Templates(directory="templates/")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class PyObjectId(ObjectId):
