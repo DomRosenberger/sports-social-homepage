@@ -1,8 +1,7 @@
 from datetime import datetime
 import os
-from fastapi import FastAPI, Request, Body, HTTPException, status, Form
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import Response, JSONResponse, RedirectResponse
+from fastapi import FastAPI, Request, HTTPException, Form
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -10,11 +9,14 @@ from bson import ObjectId
 from typing import Optional, List
 import motor.motor_asyncio
 
-app = FastAPI(docs_url=None)
+# app = FastAPI(docs_url=None)
+app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"])
-templates = Jinja2Templates(directory="templates/")
 db = client.shorturls
+templates = Jinja2Templates(directory="templates/")
+
+
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -32,10 +34,19 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
+
+class User(BaseModel):
+    username: str
+    email: str = None
+    full_name: str = None
+    disabled: bool = None
+
+
 class ShortUrlModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     short_url_id: str = Field(...)
     original_url: str = Field(...)
+    description: str = Field(...)
     password: str = Field(...)
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
@@ -86,25 +97,39 @@ class UpdateShortUrlModel(BaseModel):
 #     return shorturls
 
 
+def chunk_list(iterable, chunk_size):
+    for i in range(0, len(iterable), chunk_size):
+        yield iterable[i:i + chunk_size]
+
+
 @app.get(
-    "/{short_url_id}", response_description="List all short URLs",
+        "/", response_description="List all short URLs",
+)
+async def list_all_short_urls(request: Request):
+    shorturls = await db["shorturls"].find().to_list(50)
+    chunked_shorturls = chunk_list(shorturls, 3)
+    return templates.TemplateResponse('home.html', context={"request": request, "chunked_shorturls": chunked_shorturls})
+
+
+@app.get(
+    "/{short_url_id}", response_description="List a specific short URL form",
 )
 async def list_shorturls(request: Request, short_url_id: str):
     shorturl = await db["shorturls"].find_one({"short_url_id": short_url_id})
     if not shorturl:
         raise HTTPException(status_code=404, detail=f"Short URL {short_url_id} not found")
     if shorturl["password"]:
-        return templates.TemplateResponse('form.html', context={"request": request})
+        return templates.TemplateResponse('form.html', context={"request": request, "short_url_id": short_url_id})
     else:
         return RedirectResponse(shorturl["original_url"], status_code=301)
 
 
 @app.post(
-    "/{short_url_id}", response_description="List all short URLs",
+    "/{short_url_id}", response_description="List a specific short URL (after entering password)",
 )
 async def protected_short_url(request: Request, short_url_id: str, password: str = Form(None)):
     if not password:
-        return templates.TemplateResponse('form.html', context={"request": request, "error": "Missing password"})
+        return templates.TemplateResponse('form.html', context={"request": request, "error": "Missing password", "short_url_id": short_url_id})
 
     shorturl = await db["shorturls"].find_one({"short_url_id": short_url_id})
     if not shorturl:
@@ -112,7 +137,7 @@ async def protected_short_url(request: Request, short_url_id: str, password: str
 
     if password == shorturl["password"]:
         return RedirectResponse(shorturl["original_url"], status_code=301)
-    return templates.TemplateResponse('form.html', context={"request": request, "error": "Wrong password"})
+    return templates.TemplateResponse('form.html', context={"request": request, "error": "Wrong password", "short_url_id": short_url_id})
 
 
 # @app.get(
