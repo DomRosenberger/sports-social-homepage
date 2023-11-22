@@ -17,7 +17,6 @@ db = client.shorturls
 templates = Jinja2Templates(directory="templates/")
 
 
-
 class PyObjectId(ObjectId):
     @classmethod
     def __get_validators__(cls):
@@ -109,6 +108,12 @@ async def list_all_short_urls(request: Request):
     shorturls = await db["shorturls"].find().to_list(50)
     chunked_shorturls = chunk_list(shorturls, 3)
     return templates.TemplateResponse('home.html', context={"request": request, "chunked_shorturls": chunked_shorturls})
+
+@app.get(
+    "/donate", response_description="Shows different ways to donate"
+)
+async def show_linktree_page(request: Request):
+    return templates.TemplateResponse('donate.html', context={"request": request})
 
 
 @app.get(
