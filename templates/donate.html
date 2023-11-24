@@ -6,10 +6,15 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <!-- CSS only -->
     <link href="{{ url_for('static', path='/css/boostrap.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>
 </head>
 <style>
     body {
-        background-color: rgb(111 113 182);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
 
     .profile-picture {
@@ -21,12 +26,16 @@
         border-radius: 50%
     }
 
+    .profile-name,
+    .profile-about {
+        color: var(--bs-body-color);
+    }
+
     .profile-name {
         text-align: center;
         padding: 10px;
         font-family: Lato, sans-serif;
         font-weight: 700;
-        color: #FEFFFE;
         font-size: 20px
     }
 
@@ -34,7 +43,6 @@
         text-align: center;
         padding: 2px;
         font-family: Lato, sans-serif;
-        color: #FEFFFE;
         font-size: 15px;
         letter-spacing: 2px
     }
@@ -47,49 +55,32 @@
         padding: 15px;
         border: .5px solid #3c1ac1;
         border-width: 1px;
-        display: block;
         border-radius: 10px;
         font-family: Lato, sans-serif;
-        position: relative;
         font-size: 17px;
         width: 680px;
         max-width: 95%;
-        transition: all .3s ease-in-out
+        transition: all .3s ease-in-out;
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd !important;
+        display: flex;
+        justify-content: space-between;
+        text-decoration: none;
     }
-
-    .links-in {
-        padding: 5px;
-        border: .5px solid #ffffff00;
-        border-width: 1px;
-        width: 30px;
-        display: block;
-        border-radius: 40px;
-        left: 20px;
-        position: absolute;
-        font-size: 20px
+    .links:hover {
+        background-color: #0b5ed7;
+        text-decoration: none;
+        color: white;
+    }
+    .svg-img {
+        width: 60px;
+        max-height: 30px;
     }
 
     .links-img {
-        width: 45px;
-        display: block;
-        left: 15px;
-        right: 15px;
-        position: absolute;
-    }
-
-    .hover {
-        text-decoration: none;
-        color: #FEFFFE;
-        transition: all .3s;
-        background: #54458e
-    }
-
-    .hover:hover {
-        text-decoration: none;
-        color: #FEFFFE;
-        background: #54458e;
-        transition: all .2s;
-        transform: scale(1.03)
+        display: flex;
+        justify-content: center;
     }
 
     .link-hide {
@@ -112,9 +103,6 @@
         .wise {
             font-size: 12px;
         }
-        .wise img {
-            width: 45px!important;
-        }
     }
 
     .space {
@@ -133,22 +121,62 @@
     <div class="profile-about">Non-profit community that brings people together through activities 🏐 🎾 ⛰️</div>
 
     <!-- Links-->
-    <div class="links , hover">
-        <img src="{{ url_for('static', path='/images/logo_mbway.png') }}" class="links-img">
-        <b>936 755 284</b>
+    <div class="links">
+        <img src="{{ url_for('static', path='/images/mbway.svg') }}" class="svg-img">
+        <b id="phone" data-value="936755284">936 *** ***</b>
+        <img id="phone-clipboard" src="{{ url_for('static', path='/images/copypaste.svg') }}" onclick="copyText('phone', 'phone-clipboard')">
+    </div>    
+    <div class="links , wise">
+        <img src="{{ url_for('static', path='/images/wise.svg') }}" class="svg-img">
+        <b id="email" data-value="drosenberger@protonmail.com">drosen**(at)protonmail.com</b>
+        <img id="email-clipboard" src="{{ url_for('static', path='/images/copypaste.svg') }}" onclick="copyText('email', 'email-clipboard')">
     </div>
-    
-    <a href="https://paypal.me/sslisbon?country.x=DE&locale.x=en_US" target="_blank" class="links , hover">
-        <img src="{{ url_for('static', path='/images/logo_paypal.png') }}" class="links-img" style="width: 30px;">
-        <b>Donate via Paypal</b>
+    <a href="https://revolut.me/hidanielalmeida" target="_blank" class="links">
+        <img src="{{ url_for('static', path='/images/revolut.svg') }}" class="svg-img">
+        <b>Donate via Revolut</b>
+        <img src="{{ url_for('static', path='/images/no_image.svg') }}">
     </a>
-    
-    <div class="links , hover , wise">
-        <img src="{{ url_for('static', path='/images/logo_wise.png') }}" class="links-img" style="width: 60px;">
-        <b>drosenberger@protonmail.com</b>
-    </div> 
+    <a href="https://paypal.me/sslisbon?country.x=DE&locale.x=en_US" target="_blank" class="links">
+        <img src="{{ url_for('static', path='/images/paypal.svg') }}" class="svg-img">
+        <b>Donate via Paypal</b>
+        <img src="{{ url_for('static', path='/images/no_image.svg') }}">
+    </a>
+    <a href="https://docs.google.com/spreadsheets/d/1COe64HWt3XxHsjCKXr4asOManXUpVWoynTZ-MUz808k" target="_blank" class="links">
+        <img src="{{ url_for('static', path='/images/docs.svg') }}" class="svg-img">
+        <b>Our Finances 💸</b>
+        <img src="{{ url_for('static', path='/images/no_image.svg') }}">
+    </a>
     <div class="space"></div>
     <div class="profile-about">Please use the text "donation" or "donate" for all payments 🙏</div>
     <div class="space"></div>
+    <!-- Initialize tooltips -->
+    <script>
+        function copyText(data_elm, img_elm) {
+            var copiedElm = document.getElementById(data_elm),
+                imgElm = document.getElementById(img_elm),
+                text = copiedElm.dataset.value;
+
+            navigator.clipboard.writeText(text)
+                .then(function () {
+                    // show tooltip
+                    showTooltip(imgElm, data_elm);
+                })
+                .catch(function (err) {
+                    console.err('Unable to copy to clipboard', err);
+                })
+        }
+        function showTooltip(elm, text) {
+            var tooltip = new bootstrap.Tooltip(elm, {
+                title: `${text} copied!`,
+                placement: "top",
+                trigger: "manual"
+            });
+            tooltip.toggle();
+            setTimeout(function() {
+                tooltip.toggle();
+            }, 1500);
+        }
+    </script>
+
 </body>
 </html>
