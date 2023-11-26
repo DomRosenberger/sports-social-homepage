@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 from fastapi import FastAPI, Request, HTTPException, Form
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -114,6 +114,16 @@ async def list_all_short_urls(request: Request):
 )
 async def show_linktree_page(request: Request):
     return templates.TemplateResponse('donate.html', context={"request": request})
+
+
+@app.get(
+    "/robots.txt", response_class=PlainTextResponse
+)
+async def show_robots_txt():
+    file_name = "robots.txt"
+    file_path = f"static/txt/{file_name}"
+    file = open(file_path, "r")
+    return PlainTextResponse(file.read())
 
 
 @app.get(
