@@ -102,17 +102,41 @@ def chunk_list(iterable, chunk_size):
 
 
 @app.get(
-        "/", response_description="List all short URLs",
+        "/", response_description="Homepage",
 )
 async def list_all_short_urls(request: Request):
     shorturls = await db["shorturls"].find().to_list(50)
     chunked_shorturls = chunk_list(shorturls, 3)
     return templates.TemplateResponse('home.html', context={"request": request, "chunked_shorturls": chunked_shorturls})
 
+
+@app.get(
+        "/volleyball-lisbon/", response_description="Show Volleyball page.",
+)
+async def show_volleyball_page(request: Request):
+    return templates.TemplateResponse('volleyball.html', context={"request": request})
+
+
+@app.get(
+        "/hiking-lisbon/", response_description="Show Hiking page.",
+)
+async def show_hiking_page(request: Request):
+    return templates.TemplateResponse('hiking.html', context={"request": request})
+
+
+@app.get(
+        "/whatsapp/", response_description="List all WhatsApp URLs",
+)
+async def list_whatsapp_groups(request: Request):
+    shorturls = await db["shorturls"].find().to_list(50)
+    chunked_shorturls = chunk_list(shorturls, 3)
+    return templates.TemplateResponse('whatsapp.html', context={"request": request, "chunked_shorturls": chunked_shorturls})
+
+
 @app.get(
     "/donate", response_description="Shows different ways to donate"
 )
-async def show_linktree_page(request: Request):
+async def show_donation_page(request: Request):
     return templates.TemplateResponse('donate.html', context={"request": request})
 
 
@@ -127,7 +151,7 @@ async def show_robots_txt():
 
 
 @app.get(
-    "/{short_url_id}", response_description="List a specific short URL form",
+    "/whatsapp/{short_url_id}", response_description="List a specific short URL form",
 )
 async def list_shorturls(request: Request, short_url_id: str):
     shorturl = await db["shorturls"].find_one({"short_url_id": short_url_id})
@@ -140,7 +164,7 @@ async def list_shorturls(request: Request, short_url_id: str):
 
 
 @app.post(
-    "/{short_url_id}", response_description="List a specific short URL (after entering password)",
+    "/whatsapp/{short_url_id}", response_description="List a specific short URL (after entering password)",
 )
 async def protected_short_url(request: Request, short_url_id: str, password: str = Form(None)):
     if not password:
