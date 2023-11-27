@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block meta %}
+    <title>Sports &amp; Social WhatsApp Groups.</title>
+    <meta name="description" content="Sports &amp; Social active WhatsApp groups.">
+    {% endblock %}
+</head>
+
+{% block content %}
+
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light"><img src="{{ url_for('static', path='/images/whatsapp.svg') }}" height="40"> Our WhatsApp Groups</h1>
+                <p class="lead text-muted">Below you can find all active WhatsApp groups. To join, use the password 'sports22'.</p>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        {% for shorturls in chunked_shorturls %}
+        <div class="row">
+            {% for object in shorturls %}
+            <div class="col-md-4">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header"><h2>{{ object.short_url_id|capitalize }}</h2></div>
+                    <div class="card-body">
+                        <p>{{ object.description }}</p>
+                        <a href="/{{ object.short_url_id }}" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Join {{object.short_url_id|capitalize }} Group</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,115 +1,109 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends 'base.html' %}
+
+{% block meta %}
     <title>Support Sports &amp; Social Lisbon Community</title>
     <meta name="robots" content="noindex, nofollow" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <!-- CSS only -->
-    <link href="{{ url_for('static', path='/css/boostrap.min.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>
-</head>
-<style>
-    body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+    <style>
+        body {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .profile-picture {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        height: auto;
-        max-width: 200px;
-        border-radius: 50%
-    }
+        .profile-picture {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            height: auto;
+            max-width: 200px;
+            border-radius: 50%
+        }
 
-    .profile-name,
-    .profile-about {
-        color: var(--bs-body-color);
-    }
+        .profile-name,
+        .profile-about {
+            color: var(--bs-body-color);
+        }
 
-    .profile-name {
-        text-align: center;
-        padding: 10px;
-        font-family: Lato, sans-serif;
-        font-weight: 700;
-        font-size: 20px
-    }
+        .profile-name {
+            text-align: center;
+            padding: 10px;
+            font-family: Lato, sans-serif;
+            font-weight: 700;
+            font-size: 20px
+        }
 
-    .profile-about {
-        text-align: center;
-        padding: 2px;
-        font-family: Lato, sans-serif;
-        font-size: 15px;
-        letter-spacing: 2px
-    }
-
-    .links {
-        text-align: center;
-        margin-top: 20px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 15px;
-        border: .5px solid #3c1ac1;
-        border-width: 1px;
-        border-radius: 10px;
-        font-family: Lato, sans-serif;
-        font-size: 17px;
-        width: 680px;
-        max-width: 95%;
-        transition: all .3s ease-in-out;
-        color: #fff;
-        background-color: #0d6efd;
-        border-color: #0d6efd !important;
-        display: flex;
-        justify-content: space-between;
-        text-decoration: none;
-    }
-    .links:hover {
-        background-color: #0b5ed7;
-        text-decoration: none;
-        color: white;
-    }
-    .svg-img {
-        width: 60px;
-        max-height: 30px;
-    }
-
-    .links-img {
-        display: flex;
-        justify-content: center;
-    }
-
-    .link-hide {
-        text-decoration: none
-    }
-
-    .link-hide:hover {
-        text-decoration: none
-    }
-
-    @media (max-width:548px) {
         .profile-about {
             text-align: center;
             padding: 2px;
-            font-family: Dosis, sans-serif;
+            font-family: Lato, sans-serif;
             font-size: 15px;
-            letter-spacing: 1px
+            letter-spacing: 2px
         }
-        .wise {
-            font-size: 12px;
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            border: .5px solid #3c1ac1;
+            border-width: 1px;
+            border-radius: 10px;
+            font-family: Lato, sans-serif;
+            font-size: 17px;
+            width: 680px;
+            max-width: 95%;
+            transition: all .3s ease-in-out;
+            color: #fff;
+            background-color: #0d6efd;
+            border-color: #0d6efd !important;
+            display: flex;
+            justify-content: space-between;
+            text-decoration: none;
         }
-    }
+        .links:hover {
+            background-color: #0b5ed7;
+            text-decoration: none;
+            color: white;
+        }
+        .svg-img {
+            width: 60px;
+            max-height: 30px;
+        }
 
-    .space {
-        padding-top: 40px
-    }
+        .links-img {
+            display: flex;
+            justify-content: center;
+        }
 
-</style>
-<body>
+        .link-hide {
+            text-decoration: none
+        }
+
+        .link-hide:hover {
+            text-decoration: none
+        }
+
+        @media (max-width:548px) {
+            .profile-about {
+                text-align: center;
+                padding: 2px;
+                font-family: Dosis, sans-serif;
+                font-size: 15px;
+                letter-spacing: 1px
+            }
+            .wise {
+                font-size: 12px;
+            }
+        }
+
+        .space {
+            padding-top: 40px
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
     <div class="space"></div>
     <img src="{{ url_for('static', path='/images/sportsocial.png') }}" alt="Sports &auml; Social Logo" class="profile-picture">
 
@@ -176,6 +170,4 @@
             }, 1500);
         }
     </script>
-
-</body>
-</html>
+{% endblock %}
