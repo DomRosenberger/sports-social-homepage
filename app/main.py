@@ -8,7 +8,10 @@ from pydantic import BaseModel, Field
 from bson import ObjectId
 from typing import Optional, List
 import motor.motor_asyncio
+from app.turnstile import validate
 
+
+TURNSTILE_SITE_KEY = os.environ["TURNSTILE_SITE_KEY"]
 
 async def not_found_error(request: Request, exc: HTTPException):
     return templates.TemplateResponse('404.html', {'request': request}, status_code=404)
@@ -175,8 +178,23 @@ async def list_shorturls(request: Request, short_url_id: str):
         raise HTTPException(status_code=404, detail=f"URL {short_url_id} not found")
     if shorturl["password"]:
         return templates.TemplateResponse('form.html', context={"request": request, "short_url_id": short_url_id})
+    elif shorturl["robot_check"]:
+        return templates.TemplateResponse('form_turnstile.html', context={"request": request, "short_url_id": short_url_id, "turnstile_site_key": TURNSTILE_SITE_KEY})
     else:
         return RedirectResponse(shorturl["original_url"], status_code=301)
+
+
+@app.post(
+    "/check/{short_url_id}", response_description="List a specific short URL (after entering password)",
+)
+async def validate_turnstile(request: Request, short_url_id: str, challenge: str = Form(None)):
+    verifyResponse = validate(challenge, user_ip=None)
+    if verifyResponse.success:
+        shorturl = await db["shorturls"].find_one({"short_url_id": short_url_id})
+        return RedirectResponse(shorturl["original_url"], status_code=301)
+    else:
+        return templates.TemplateResponse('form_turnstile.html', context={"request": request, "short_url_id": short_url_id, "turnstile_site_key": TURNSTILE_SITE_KEY})
+
 
 
 @app.post(
