@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Join {{ short_url_id|capitalize }} WhatsApp Group</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" defer></script>
+    <style>
+        #challenge {
+            display: none;
+        }
+        #submit {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5 mb-3">
+                <img src="{{ url_for('static', path='/images/sportsocial.png') }}" class="img-fluid" alt="Sports &auml; Social Logo">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form method="post" action="/check/{{ short_url_id }}">
+                    <h3>Join {{ short_url_id|capitalize }} WhatsApp Group</h3>
+                    <input type="text" placeholder="challenge" name="challenge" id="challenge">
+                    <div class="checkbox mb-3">
+                        <!-- The Turnstile widget will be injected in the following div. -->
+                        <div id="myWidget"></div>
+                        <!-- end. -->
+                      </div>
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <input type="submit" id="submit" value="Join Group" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        let challenge = document.getElementById('challenge');
+        window.onloadTurnstileCallback = function () {
+            turnstile.render('#myWidget', {
+                sitekey: '{{ turnstile_site_key }}',
+                callback: function(token) {
+                    challenge.value = token;
+                    document.getElementById('submit').style.display = 'block';
+                },
+            });
+        };
+    </script>
+{% endblock %}
