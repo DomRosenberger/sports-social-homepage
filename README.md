@@ -1,2 +1,2 @@
-# fastapi-url-shortener
-FastAPI URL shortener App
+# Sports & Social Lisbon Homepage
+Using Python's FastAPI to host a simple homepage.
